@@ -24,8 +24,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @RequestMapping("/authentication")
 public class AuthenticationController {
 
-	@Autowired
 	private UserService userService;
+
+	public AuthenticationController(UserService userService) {
+		this.userService = userService;
+	}
 
 	@PostMapping("/login")
 	public ResponseEntity<Token> login(@RequestBody Login login) {

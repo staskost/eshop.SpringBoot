@@ -23,12 +23,13 @@ import io.jsonwebtoken.Jwts;
 @RequestMapping("secured/users")
 public class UserController {
 
-	@Autowired
 	private UserService userService;
 
-//	@POST
-//	@Path("/save")
-//	@Consumes({ MediaType.APPLICATION_JSON })
+	
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
+
 	@PostMapping("/save")
 	public void registerUser(@RequestBody User user) {
 		User user2 = userService.findByEmail(user.getEmail());
