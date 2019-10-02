@@ -5,7 +5,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.staskost.eshop.filter.JwtFilter;
+import com.staskost.eshop.security.JwtFilter;
 
 @Configuration
 public class JwtConfig {

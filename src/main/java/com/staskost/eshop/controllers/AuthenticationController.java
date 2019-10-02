@@ -1,9 +1,10 @@
 package com.staskost.eshop.controllers;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,19 +33,21 @@ public class AuthenticationController {
 
 	@PostMapping("/login")
 	public ResponseEntity<Token> login(@RequestBody Login login) {
+		Map<String, Object> claims = new TreeMap<String, Object>();
 		User u = userService.findByEmail(login.getEmail());
 		if (u == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Email");
-
 		}
 		String password = login.getPassword();
 		String secret = u.retrieveSecret();
 		String hashedPassword = DigestUtils.sha256Hex(password + secret);
 		User user = userService.findByEmailAndPassword(u.getEmail(), hashedPassword);
+		claims.put("user", user);
 		if (user != null) {
-			return new ResponseEntity<>(new Token(Jwts.builder().setSubject(user.getEmail()).setIssuedAt(new Date())
-					.claim("role", user.getRole().getName()).signWith(SignatureAlgorithm.HS256, "123#&*zcvAWEE999")
-					.compact()), HttpStatus.OK);
+			return new ResponseEntity<>(
+					new Token(Jwts.builder().setExpiration(new Date(System.currentTimeMillis() + 864_000_000L))
+							.setClaims(claims).signWith(SignatureAlgorithm.HS256, "123#&*zcvAWEE999").compact()),
+					HttpStatus.OK);
 		} else {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Password");
 

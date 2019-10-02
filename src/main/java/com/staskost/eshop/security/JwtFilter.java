@@ -1,4 +1,4 @@
-package com.staskost.eshop.filter;
+package com.staskost.eshop.security;
 
 import java.io.IOException;
 

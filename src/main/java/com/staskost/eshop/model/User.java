@@ -126,4 +126,12 @@ public class User extends BaseEntity {
 		this.secret = secret;
 	}
 
+	@Override
+	public String toString() {
+		return "User [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", password=" + password
+				+ ", isLoyal=" + isLoyal + ", points=" + points + ", role=" + role + ", secret=" + secret + ", cart="
+				+ cart + "]";
+	}
+
+	
 }

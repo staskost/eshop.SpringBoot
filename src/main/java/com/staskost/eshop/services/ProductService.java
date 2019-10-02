@@ -25,5 +25,7 @@ public interface ProductService {
 	List<Product> findByPrice(double price);
 	
 	List<Product> findByPriceBetween(double minPrice, double maxPrice);
+	
+	void setProductPrice(double price, int id);
 
 }

@@ -87,4 +87,16 @@ public class ProductServiceImpl implements ProductService{
 	public List<Product> findByPriceBetween(double minPrice, double maxPrice) {
 		return productRepository.findByPriceBetween(minPrice, maxPrice);
 	}
+
+	public void setProductPrice(double price, int id) {
+		Optional<Product> opt =  productRepository.findById(id);
+		if (opt.isPresent()) {
+			Product product = opt.get();
+			product.setPrice(price);
+			productRepository.save(product);
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found");
+		}
+		
+	}
 }
