@@ -8,17 +8,22 @@ import com.staskost.eshop.model.Cart;
 import com.staskost.eshop.model.Product;
 import com.staskost.eshop.model.User;
 import com.staskost.eshop.repos.CartRepository;
+import com.staskost.eshop.repos.ProductRepository;
 
 @Service
 public class CartServiseImpl implements CartService {
 
 	private CartRepository cartRepository;
-	
+
 	private UserService userService;
 
-	public CartServiseImpl(CartRepository cartRepository, UserService userService) {
+	private ProductRepository ProductRepository;
+
+	public CartServiseImpl(CartRepository cartRepository, UserService userService,
+			com.staskost.eshop.repos.ProductRepository productRepository) {
 		this.cartRepository = cartRepository;
 		this.userService = userService;
+		ProductRepository = productRepository;
 	}
 
 	public Cart createCart(User user) {
@@ -62,5 +67,16 @@ public class CartServiseImpl implements CartService {
 		userService.withdraw(totalAfterDiscount);
 		userService.givePointsToLoyal(totalAfterDiscount, user);
 		cartRepository.delete(cart);
+		userService.withdraw(totalAfterDiscount);
+		List<Product> products = cart.getCartProducts();
+		int count = 0;
+		for (Product p : products) {
+			count = p.getProductCount();
+			p.setProductCount(count - 1);
+			if(count >= 0 ) {
+				p.setIsAvailabe(0);
+			}
+			ProductRepository.save(p);
+		}
 	}
 }

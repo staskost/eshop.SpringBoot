@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,6 +30,12 @@ public class Product extends BaseEntity {
 	@ManyToMany(mappedBy = "cartProducts")
 	@JsonIgnore
 	List<Cart> carts;
+
+	@Column(name = "count")
+	private int productCount;
+
+	@Column(name = "is_availabe")
+	private int isAvailabe;
 
 	public String getName() {
 		return name;
@@ -67,6 +75,22 @@ public class Product extends BaseEntity {
 
 	public void setCarts(List<Cart> carts) {
 		this.carts = carts;
+	}
+
+	public int getProductCount() {
+		return productCount;
+	}
+
+	public void setProductCount(int productCount) {
+		this.productCount = productCount;
+	}
+
+	public int getIsAvailabe() {
+		return isAvailabe;
+	}
+
+	public void setIsAvailabe(int isAvailabe) {
+		this.isAvailabe = isAvailabe;
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.staskost.eshop.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -9,7 +11,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "user")
-public class User extends BaseEntity {
+public class User extends BaseEntity implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Column(name = "first_name")
 	private String firstName;
@@ -86,7 +90,7 @@ public class User extends BaseEntity {
 		this.password = password;
 	}
 
-	public Cart getCart() {
+	public Cart retrieveCart() {
 		return cart;
 	}
 
@@ -126,12 +130,4 @@ public class User extends BaseEntity {
 		this.secret = secret;
 	}
 
-	@Override
-	public String toString() {
-		return "User [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", password=" + password
-				+ ", isLoyal=" + isLoyal + ", points=" + points + ", role=" + role + ", secret=" + secret + ", cart="
-				+ cart + "]";
-	}
-
-	
 }
