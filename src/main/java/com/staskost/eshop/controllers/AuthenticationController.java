@@ -45,7 +45,7 @@ public class AuthenticationController {
 		claims.put("user", user);
 		if (user != null) {
 			return new ResponseEntity<>(
-					new Token(Jwts.builder().setExpiration(new Date(System.currentTimeMillis() + 864_000_000L))
+					new Token(Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 864_000_000L))
 							.setClaims(claims).signWith(SignatureAlgorithm.HS256, "123#&*zcvAWEE999").compact()),
 					HttpStatus.OK);
 		} else {

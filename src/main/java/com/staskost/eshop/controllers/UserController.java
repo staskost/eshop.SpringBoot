@@ -17,7 +17,7 @@ import com.staskost.eshop.security.Authorization;
 import com.staskost.eshop.services.UserService;
 
 @RestController
-@RequestMapping("secured/users")
+@RequestMapping("/secured/app")
 public class UserController {
 
 	private UserService userService;
@@ -49,6 +49,11 @@ public class UserController {
 		User user = Authorization.getUserFromToken(token);
 		return ResponseEntity.status(HttpStatus.OK).body(user);
 
+	}
+
+	@GetMapping
+	public String sayHello() {
+		return "Hello";
 	}
 
 }

@@ -6,11 +6,9 @@ import com.staskost.eshop.model.Product;
 
 public interface ProductService {
 
-	void createProduct(Product product);
+	void saveProduct(Product product);
 
 	public void updateProduct(int id, Product product);
-
-	public void deleteProduct(int id);
 
 	Product getById(int id);
 
@@ -25,12 +23,14 @@ public interface ProductService {
 	List<Product> findByPrice(double price);
 
 	List<Product> findByPriceBetween(double minPrice, double maxPrice);
+	
+	List<Product> findByCategory(String category);
 
 	void setProductPrice(double price, int id);
 
 	void removeItemfromProductCount(int items, int id);
 	
-	void addItemfromProductCount(int items,int id);
+	void addItemToProductCount(int items,int id);
 	
 	void removeProduct(int id);
 	

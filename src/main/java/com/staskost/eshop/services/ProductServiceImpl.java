@@ -19,7 +19,7 @@ public class ProductServiceImpl implements ProductService {
 		this.productRepository = productRepository;
 	}
 
-	public void createProduct(Product product) {
+	public void saveProduct(Product product) {
 		productRepository.save(product);
 	}
 
@@ -32,16 +32,6 @@ public class ProductServiceImpl implements ProductService {
 			pr.setCategory(product.getCategory());
 			pr.setDescription(product.getDescription());
 			productRepository.save(pr);
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found");
-		}
-	}
-
-	public void deleteProduct(int id) {
-		Optional<Product> opt = productRepository.findById(id);
-		if (opt.isPresent()) {
-			Product product = opt.get();
-			productRepository.delete(product);
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found");
 		}
@@ -122,7 +112,7 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
-	public void addItemfromProductCount(int items, int id) {
+	public void addItemToProductCount(int items, int id) {
 		Optional<Product> opt = productRepository.findById(id);
 		if (opt.isPresent()) {
 			Product product = opt.get();
@@ -148,7 +138,7 @@ public class ProductServiceImpl implements ProductService {
 		Optional<Product> opt = productRepository.findById(id);
 		if (opt.isPresent()) {
 			Product product = opt.get();
-			productRepository.save(product);
+			productRepository.delete(product);
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found");
 		}
@@ -160,5 +150,11 @@ public class ProductServiceImpl implements ProductService {
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found");
 		}
+	}
+
+	@Override
+	public List<Product> findByCategory(String category) {
+		List<Product> products = productRepository.findByCategory(category);
+		return products;
 	}
 }

@@ -6,19 +6,19 @@ import com.staskost.eshop.model.User;
 
 public interface CartService {
 	
-	Cart createCart(User user);
+	Cart createCart(int userId);
 	
-	Cart getUsersCart(User user);
+	Cart getUsersCart(int userId);
 	
-	void addProduct(Cart cart, Product product);
+	void addProductToCart(int cartId, int productId);
 	
-	void removeProduct(Cart cart, Product product);
+	void removeProductFromCart(int cartId, int productId);
 	
 	void deleteCart(Cart cart);
 	
 	double getTotal(Cart cart);
 	
-	void checkout(User user, Cart cart);
+	void checkout(int userId, int cartId);
 	
 
 }

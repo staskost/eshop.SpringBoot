@@ -1,14 +1,16 @@
 package com.staskost.eshop.services;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.staskost.eshop.model.Cart;
 import com.staskost.eshop.model.Product;
 import com.staskost.eshop.model.User;
 import com.staskost.eshop.repos.CartRepository;
-import com.staskost.eshop.repos.ProductRepository;
 
 @Service
 public class CartServiseImpl implements CartService {
@@ -17,39 +19,59 @@ public class CartServiseImpl implements CartService {
 
 	private UserService userService;
 
-	private ProductRepository ProductRepository;
+	private ProductService productService;
 
-	public CartServiseImpl(CartRepository cartRepository, UserService userService,
-			com.staskost.eshop.repos.ProductRepository productRepository) {
+	public CartServiseImpl(CartRepository cartRepository, UserService userService, ProductService productService) {
 		this.cartRepository = cartRepository;
 		this.userService = userService;
-		ProductRepository = productRepository;
+		this.productService = productService;
 	}
 
-	public Cart createCart(User user) {
+	public Cart createCart(int userId) {
+		User user = userService.getById(userId);
 		Cart cart = new Cart();
 		cart.setUser(user);
 		cartRepository.save(cart);
 		return cart;
 	}
 
-	public Cart getUsersCart(User user) {
+	public Cart getUsersCart(int userId) {
+		User user = userService.getById(userId);
 		Cart cart = cartRepository.findByUser(user);
 		return cart;
 	}
 
-	public void addProduct(Cart cart, Product product) {
-		cart.addProcuct(product);
-		cartRepository.save(cart);
+	public void addProductToCart(int cartId, int productId) {
+		Product product = productService.getById(productId);
+		Optional<Cart> opt = cartRepository.findById(cartId);
+		if (opt.isPresent()) {
+			Cart cart = opt.get();
+			cart.addProcuct(product);
+			cartRepository.save(cart);
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not Found");
+		}
 	}
 
-	public void removeProduct(Cart cart, Product product) {
-		cart.removeProduct(product);
-		cartRepository.save(cart);
+	public void removeProductFromCart(int cartId, int productId) {
+		Product product = productService.getById(productId);
+		Optional<Cart> opt = cartRepository.findById(cartId);
+		if (opt.isPresent()) {
+			Cart cart = opt.get();
+
+			cart.removeProduct(product);
+			cartRepository.save(cart);
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not Found");
+		}
 	}
 
 	public void deleteCart(Cart cart) {
-		cartRepository.delete(cart);
+		if (cart != null) {
+			cartRepository.delete(cart);
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not Found");
+		}
 	}
 
 	public double getTotal(Cart cart) {
@@ -61,22 +83,28 @@ public class CartServiseImpl implements CartService {
 		return sum;
 	}
 
-	public void checkout(User user, Cart cart) {
-		double total = getTotal(cart);
-		double totalAfterDiscount = userService.getTotalAfterDiscount(total, user);
-		userService.withdraw(totalAfterDiscount);
-		userService.givePointsToLoyal(totalAfterDiscount, user);
-		cartRepository.delete(cart);
-		userService.withdraw(totalAfterDiscount);
-		List<Product> products = cart.getCartProducts();
-		int count = 0;
-		for (Product p : products) {
-			count = p.getProductCount();
-			p.setProductCount(count - 1);
-			if(count >= 0 ) {
-				p.setIsAvailabe(0);
+	public void checkout(int userId, int cartId) {
+		User user = userService.getById(userId);
+		Optional<Cart> opt = cartRepository.findById(cartId);
+		if (opt.isPresent()) {
+			Cart cart = opt.get();
+			double total = getTotal(cart);
+			double totalAfterDiscount = userService.getTotalAfterDiscount(total, user);
+			userService.withdraw(totalAfterDiscount);
+			userService.givePointsToLoyal(totalAfterDiscount, user);
+			deleteCart(cart);
+			userService.withdraw(totalAfterDiscount);
+			List<Product> products = cart.getCartProducts();
+			int count = 0;
+			for (Product p : products) {
+				count = p.getProductCount();
+				p.setProductCount(count - 1);
+				if (count >= 0) {
+					p.setIsAvailabe(0);
+				}
+				productService.saveProduct(p);
 			}
-			ProductRepository.save(p);
 		}
+
 	}
 }
