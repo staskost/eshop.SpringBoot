@@ -27,6 +27,16 @@ public class CartServiseImpl implements CartService {
 		this.productService = productService;
 	}
 
+	private Cart returnCartOrNull(int id) {
+		Optional<Cart> opt = cartRepository.findById(id);
+		if (opt.isPresent()) {
+			Cart cart = opt.get();
+			return cart;
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not Found");
+		}
+	}
+
 	public Cart createCart(int userId) {
 		User user = userService.getById(userId);
 		Cart cart = new Cart();
@@ -43,27 +53,17 @@ public class CartServiseImpl implements CartService {
 
 	public void addProductToCart(int cartId, int productId) {
 		Product product = productService.getById(productId);
-		Optional<Cart> opt = cartRepository.findById(cartId);
-		if (opt.isPresent()) {
-			Cart cart = opt.get();
-			cart.addProcuct(product);
-			cartRepository.save(cart);
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not Found");
-		}
+		Cart cart = returnCartOrNull(cartId);
+		cart.addProcuct(product);
+		cartRepository.save(cart);
 	}
 
 	public void removeProductFromCart(int cartId, int productId) {
 		Product product = productService.getById(productId);
-		Optional<Cart> opt = cartRepository.findById(cartId);
-		if (opt.isPresent()) {
-			Cart cart = opt.get();
-
-			cart.removeProduct(product);
-			cartRepository.save(cart);
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart Not Found");
-		}
+		Cart cart = returnCartOrNull(cartId);
+		cart.addProcuct(product);
+		cart.removeProduct(product);
+		cartRepository.save(cart);
 	}
 
 	public void deleteCart(Cart cart) {
@@ -85,26 +85,23 @@ public class CartServiseImpl implements CartService {
 
 	public void checkout(int userId, int cartId) {
 		User user = userService.getById(userId);
-		Optional<Cart> opt = cartRepository.findById(cartId);
-		if (opt.isPresent()) {
-			Cart cart = opt.get();
-			double total = getTotal(cart);
-			double totalAfterDiscount = userService.getTotalAfterDiscount(total, user);
-			userService.withdraw(totalAfterDiscount);
-			userService.givePointsToLoyal(totalAfterDiscount, user);
-			deleteCart(cart);
-			userService.withdraw(totalAfterDiscount);
-			List<Product> products = cart.getCartProducts();
-			int count = 0;
-			for (Product p : products) {
-				count = p.getProductCount();
-				p.setProductCount(count - 1);
-				if (count >= 0) {
-					p.setIsAvailabe(0);
-				}
-				productService.saveProduct(p);
+		Cart cart = returnCartOrNull(cartId);
+		double total = getTotal(cart);
+		double totalAfterDiscount = userService.getTotalAfterDiscount(total, user);
+		userService.withdraw(totalAfterDiscount);
+		userService.givePointsToLoyal(totalAfterDiscount, user);
+		deleteCart(cart);
+		userService.withdraw(totalAfterDiscount);
+		List<Product> products = cart.getCartProducts();
+		int count = 0;
+		for (Product p : products) {
+			count = p.getProductCount();
+			p.setProductCount(count - 1);
+			if (count >= 0) {
+				p.setIsAvailabe(0);
 			}
+			productService.saveProduct(p);
 		}
-
 	}
+
 }

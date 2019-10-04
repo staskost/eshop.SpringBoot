@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.staskost.eshop.model.Product;
 import com.staskost.eshop.model.User;
 import com.staskost.eshop.repos.UserRepository;
 
@@ -17,6 +18,16 @@ public class UserServiceImpl implements UserService {
 
 	public UserServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
+	}
+	
+	private User returnUserOrNull(int id) {
+		Optional<User> opt = userRepository.findById(id);
+		if (opt.isPresent()) {
+			User user = opt.get();
+			return user;
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+		}
 	}
 
 	public void createUser(User user) {
@@ -32,13 +43,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public User getById(int id) {
-		Optional<User> optional = userRepository.findById(id);
-		if (optional.isPresent()) {
-			User user = optional.get();
-			return user;
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
-		}
+		User user = returnUserOrNull(id);
+		return user;
 	}
 
 	public List<User> getAll() {
