@@ -19,7 +19,7 @@ import com.staskost.eshop.model.AuthenticationToken;
 public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
 	private static final String TOKEN_HEADER = "Authorization";
-	private static final String TOKEN_PREFIX = "Bearer";
+	private static final String TOKEN_PREFIX = "Staskost";
 
 	public TokenAuthenticationFilter() {
 		super("/secured/**");

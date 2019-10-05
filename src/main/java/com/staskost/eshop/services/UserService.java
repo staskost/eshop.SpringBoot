@@ -22,7 +22,7 @@ public interface UserService {
 	
 	void withdraw(double total);
 	
-	User getUserFromToken(String token);
+//	User getUserFromToken(String token);
 	
 	User getAuthenticatedUser();
 	

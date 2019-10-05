@@ -25,6 +25,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @RequestMapping("/authentication")
 public class AuthenticationController {
 
+	private static final String SECRET_KEY = "123#&*zcvAWEE999";
+	
 	private UserService userService;
 
 	public AuthenticationController(UserService userService) {
@@ -42,16 +44,13 @@ public class AuthenticationController {
 		String secret = u.retrieveSecret();
 		String hashedPassword = DigestUtils.sha256Hex(password + secret);
 		User user = userService.findByEmailAndPassword(u.getEmail(), hashedPassword);
-		
+
 		if (user != null) {
-			return new ResponseEntity<>(
-					new AuthenticationToken(Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 864_000_000L))
-							.setSubject(user.getEmail())
-							.claim("email", user.getEmail())
-							.claim("id", user.getId())
-							.claim("role", user.getRole())
-							.signWith(SignatureAlgorithm.HS256, "123#&*zcvAWEE999").compact()),
-					HttpStatus.OK);
+			return new ResponseEntity<>(new AuthenticationToken(Jwts.builder().setIssuedAt(new Date())
+					.setExpiration(new Date(System.currentTimeMillis() + 864_000_000L)).setSubject(user.getEmail())
+//							.claim("email", user.getEmail())
+					.claim("id", user.getId()).claim("role", user.getRole())
+					.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact()), HttpStatus.OK);
 		} else {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Password");
 

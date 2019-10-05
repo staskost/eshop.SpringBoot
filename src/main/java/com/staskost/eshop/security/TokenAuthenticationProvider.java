@@ -13,10 +13,10 @@ import com.staskost.eshop.model.AuthenticationToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
-@Component 
+@Component
 public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
-
-//	private final static String SECURITY_KEY = "!@asdsadJ780";
+	
+	private static final String SECRET_KEY = "123#&*zcvAWEE999";
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
@@ -28,10 +28,9 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
 			throws AuthenticationException {
 		AuthenticationToken authenticationToken = (AuthenticationToken) authentication;
 		String token = authenticationToken.getToken();
-		Claims claim = Jwts.parser().setSigningKey("123#&*zcvAWEE999").parseClaimsJws(token).getBody();
+		Claims claim = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
 		return new ApplicationUser(claim.getSubject());
 
 	}
 
 }
-

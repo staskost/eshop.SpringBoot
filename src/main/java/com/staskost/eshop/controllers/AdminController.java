@@ -41,52 +41,45 @@ public class AdminController {
 	}
 
 	@PostMapping("create/product")
-	public ResponseEntity<String> createProduct(@RequestHeader(value = "staskost") String alphanumeric,
-			@RequestBody Product product) {
+	public ResponseEntity<String> createProduct(@RequestBody Product product) {
 		productService.saveProduct(product);
 		return ResponseEntity.status(HttpStatus.OK)
 				.body("Product  " + product.getName() + " was successfully created.");
 	}
 
 	@PutMapping("update/product/{id}")
-	public ResponseEntity<String> updateProduct(@RequestHeader(value = "staskost") String alphanumeric,
-			@PathVariable int id, @RequestBody Product product) {
+	public ResponseEntity<String> updateProduct(@PathVariable int id, @RequestBody Product product) {
 		productService.updateProduct(id, product);
 		return ResponseEntity.status(HttpStatus.OK)
 				.body("Product  " + product.getName() + " was successfully updated.");
 	}
 
 	@PostMapping("/set/price/{id}/{price}")
-	public ResponseEntity<String> setProductPrice(@RequestHeader(value = "staskost") String alphanumeric,
-			@PathVariable int id, @PathVariable double price) {
+	public ResponseEntity<String> setProductPrice(@PathVariable int id, @PathVariable double price) {
 		productService.setProductPrice(price, id);
 		return ResponseEntity.status(HttpStatus.OK).body("Price was set to " + price);
 	}
 
 	@PostMapping("/add/product")
-	public ResponseEntity<String> addNewProduct(@RequestHeader(value = "staskost") String alphanumeric,
-			@RequestBody Product product) {
+	public ResponseEntity<String> addNewProduct(@RequestBody Product product) {
 		productService.addProduct(product);
 		return ResponseEntity.status(HttpStatus.OK).body("Product " + product.getName() + " was successfully added.");
 	}
 
 	@DeleteMapping("/remove/product/{id}")
-	public ResponseEntity<String> removeProduct(@RequestHeader(value = "staskost") String alphanumeric,
-			@PathVariable int id) {
+	public ResponseEntity<String> removeProduct(@PathVariable int id) {
 		productService.removeProduct(id);
 		return ResponseEntity.status(HttpStatus.OK).body("Product was removed successfully.");
 	}
 
 	@PostMapping("/add/items/{items}/{id}")
-	public ResponseEntity<String> addItems(@RequestHeader(value = "staskost") String alphanumeric,
-			@PathVariable int items, @PathVariable int id) {
+	public ResponseEntity<String> addItems(@PathVariable int items, @PathVariable int id) {
 		productService.addItemToProductCount(items, id);
 		return ResponseEntity.status(HttpStatus.OK).body("Items added successfully.");
 	}
 
 	@PostMapping("/remove/items/{items}/{id}")
-	public ResponseEntity<String> removeItems(@RequestHeader(value = "staskost") String alphanumeric,
-			@PathVariable int items, @PathVariable int id) {
+	public ResponseEntity<String> removeItems(@PathVariable int items, @PathVariable int id) {
 		productService.removeItemfromProductCount(items, id);
 		return ResponseEntity.status(HttpStatus.OK).body("Items removed successfully.");
 	}

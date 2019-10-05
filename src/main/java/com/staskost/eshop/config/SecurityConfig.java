@@ -2,7 +2,6 @@ package com.staskost.eshop.config;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,8 +21,11 @@ import com.staskost.eshop.security.TokenAuthenticationSuccessHandler;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
 	private TokenAuthenticationProvider authenticationProvider;
+
+	public SecurityConfig(TokenAuthenticationProvider authenticationProvider) {
+		this.authenticationProvider = authenticationProvider;
+	}
 
 	@Bean
 	@Override
