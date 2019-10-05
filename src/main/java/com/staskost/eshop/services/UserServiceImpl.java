@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.staskost.eshop.model.Product;
 import com.staskost.eshop.model.User;
 import com.staskost.eshop.repos.UserRepository;
 
@@ -96,21 +97,34 @@ public class UserServiceImpl implements UserService {
 		// card transaction here
 		System.out.println("Your transaction was successfull");
 	}
+//
+//	private Object getClaimFromToken(String token) {
+//		Object user = Jwts.parser().setSigningKey("123#&*zcvAWEE999").parseClaimsJws(token).getBody().get("user");
+//		return user;
+//	}
 
-	private Object getClaimFromToken(String token) {
-		Object user = Jwts.parser().setSigningKey("123#&*zcvAWEE999").parseClaimsJws(token).getBody().get("user");
-		return user;
-	}
+//	public User getUserFromToken(String token) {
+//		Object obj = getClaimFromToken(token);
+//		ObjectMapper mapper = new ObjectMapper();
+//		User user = mapper.convertValue(obj, User.class);
+//		if(user == null) {
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+//		}
+//		return user;
+//	}
 
 	public User getUserFromToken(String token) {
-		Object obj = getClaimFromToken(token);
-		ObjectMapper mapper = new ObjectMapper();
-		User user = mapper.convertValue(obj, User.class);
-		if(user == null) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
-		}
+		int userId = (int) Jwts.parser().setSigningKey("123#&*zcvAWEE999").parseClaimsJws(token).getBody().get("id");
+		User user = getById(userId);
 		return user;
 	}
 
+	public User getAuthenticatedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		String email = userDetails.getUsername();
+		User user = findByEmail(email);
+		return user;
+	}
 
 }

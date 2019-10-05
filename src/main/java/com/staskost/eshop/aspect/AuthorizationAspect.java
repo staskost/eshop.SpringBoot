@@ -29,18 +29,12 @@ public class AuthorizationAspect {
 	private void adviceForValidationOfTokenForAdmin(JoinPoint theJoinPoint) {
 		MethodSignature methodSig = (MethodSignature) theJoinPoint.getSignature();
 		System.out.println("Method called :" + methodSig);
-		String[] parameterNames = methodSig.getParameterNames();
-		Object[] arguments = theJoinPoint.getArgs();
-		for (int i = 0; i < parameterNames.length; i++) {
-			if (parameterNames[i].equals("alphanumeric")) {
-				String alphanumeric = (String) arguments[i];
-				validateTokenForAdmin(alphanumeric);
-			}
-		}
+		validateTokenForAdmin();
+
 	}
 
-	private void validateTokenForAdmin(String token) {
-		User user = userService.getUserFromToken(token);
+	private void validateTokenForAdmin() {
+		User user = userService.getAuthenticatedUser();
 		if ((user.getRole().getId() != 2) || (user == null)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not Authorized");
 		}

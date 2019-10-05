@@ -9,15 +9,17 @@ public class ApplicationUser implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
+	private String email;
+
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public ApplicationUser() {
 		super();
 	}
 
-	public ApplicationUser(Collection<? extends GrantedAuthority> authorities) {
+	public ApplicationUser(String email) {
 		super();
-		this.authorities = authorities;
+		this.email = email;
 	}
 
 	@Override
@@ -52,7 +54,19 @@ public class ApplicationUser implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return null;
+		return email;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+		this.authorities = authorities;
 	}
 
 }

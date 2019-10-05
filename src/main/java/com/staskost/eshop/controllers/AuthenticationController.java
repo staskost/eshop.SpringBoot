@@ -33,7 +33,7 @@ public class AuthenticationController {
 
 	@PostMapping("/login")
 	public ResponseEntity<AuthenticationToken> login(@RequestBody Login login) {
-		Map<String, Object> claims = new TreeMap<String, Object>();
+
 		User u = userService.findByEmail(login.getEmail());
 		if (u == null) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Email");
@@ -44,10 +44,12 @@ public class AuthenticationController {
 		User user = userService.findByEmailAndPassword(u.getEmail(), hashedPassword);
 		
 		if (user != null) {
-			claims.put("user", user);
 			return new ResponseEntity<>(
 					new AuthenticationToken(Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 864_000_000L))
-							.setClaims(claims)
+							.setSubject(user.getEmail())
+							.claim("email", user.getEmail())
+							.claim("id", user.getId())
+							.claim("role", user.getRole())
 							.signWith(SignatureAlgorithm.HS256, "123#&*zcvAWEE999").compact()),
 					HttpStatus.OK);
 		} else {

@@ -51,7 +51,7 @@ public class User extends BaseEntity implements Serializable {
 	}
 
 	public User(String firstName, String lastName, String email, String password, int isLoyal, int points, Role role,
-			String username) {
+			String userName) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -60,7 +60,7 @@ public class User extends BaseEntity implements Serializable {
 		this.isLoyal = isLoyal;
 		this.points = points;
 		this.role = role;
-		this.userName = username;
+		this.userName = userName;
 	}
 
 	public String getFirstName() {

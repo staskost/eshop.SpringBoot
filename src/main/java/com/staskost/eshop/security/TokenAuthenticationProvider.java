@@ -29,7 +29,8 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
 		AuthenticationToken authenticationToken = (AuthenticationToken) authentication;
 		String token = authenticationToken.getToken();
 		Claims claim = Jwts.parser().setSigningKey("123#&*zcvAWEE999").parseClaimsJws(token).getBody();
-		return new ApplicationUser();
+		return new ApplicationUser(claim.getSubject());
+
 	}
 
 }

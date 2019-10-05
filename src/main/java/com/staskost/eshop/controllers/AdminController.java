@@ -34,7 +34,7 @@ public class AdminController {
 	}
 
 	@GetMapping("/users")
-	public ResponseEntity<List<User>> getAllUsers(@RequestHeader(value = "staskost") String alphanumeric) {
+	public ResponseEntity<List<User>> getAllUsers() {
 		List<User> users = userService.getAll();
 		return new ResponseEntity<>(users, HttpStatus.OK);
 

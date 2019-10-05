@@ -24,4 +24,6 @@ public interface UserService {
 	
 	User getUserFromToken(String token);
 	
+	User getAuthenticatedUser();
+	
 }
