@@ -84,7 +84,7 @@ public class AdminController {
 		return ResponseEntity.status(HttpStatus.OK).body("Items added successfully.");
 	}
 
-	@PostMapping("/add/items/{items}/{id}")
+	@PostMapping("/remove/items/{items}/{id}")
 	public ResponseEntity<String> removeItems(@RequestHeader(value = "staskost") String alphanumeric,
 			@PathVariable int items, @PathVariable int id) {
 		productService.removeItemfromProductCount(items, id);

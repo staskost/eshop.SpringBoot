@@ -27,7 +27,7 @@ public class CartServiseImpl implements CartService {
 		this.productService = productService;
 	}
 
-	private Cart returnCartOrNull(int id) {
+	private Cart returnCartOrException(int id) {
 		Optional<Cart> opt = cartRepository.findById(id);
 		if (opt.isPresent()) {
 			Cart cart = opt.get();
@@ -53,14 +53,14 @@ public class CartServiseImpl implements CartService {
 
 	public void addProductToCart(int cartId, int productId) {
 		Product product = productService.getById(productId);
-		Cart cart = returnCartOrNull(cartId);
+		Cart cart = returnCartOrException(cartId);
 		cart.addProcuct(product);
 		cartRepository.save(cart);
 	}
 
 	public void removeProductFromCart(int cartId, int productId) {
 		Product product = productService.getById(productId);
-		Cart cart = returnCartOrNull(cartId);
+		Cart cart = returnCartOrException(cartId);
 		cart.addProcuct(product);
 		cart.removeProduct(product);
 		cartRepository.save(cart);
@@ -85,7 +85,7 @@ public class CartServiseImpl implements CartService {
 
 	public void checkout(int userId, int cartId) {
 		User user = userService.getById(userId);
-		Cart cart = returnCartOrNull(cartId);
+		Cart cart = returnCartOrException(cartId);
 		double total = getTotal(cart);
 		double totalAfterDiscount = userService.getTotalAfterDiscount(total, user);
 		userService.withdraw(totalAfterDiscount);

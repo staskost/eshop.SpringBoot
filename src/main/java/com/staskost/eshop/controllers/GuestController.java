@@ -23,12 +23,6 @@ public class GuestController {
 	}
 
 	@GetMapping("product/by/price/{price}")
-	public ResponseEntity<List<Product>> findProductByPrice(@PathVariable double price) {
-		List<Product> products = productService.findByPrice(price);
-		return new ResponseEntity<>(products, HttpStatus.OK);
-	}
-
-	@GetMapping("product/by/price/{price}")
 	public ResponseEntity<List<Product>> findProductByPriceBetween(@PathVariable double priceMin,
 			@PathVariable double priceMax) {
 		List<Product> products = productService.findByPriceBetween(priceMin, priceMax);

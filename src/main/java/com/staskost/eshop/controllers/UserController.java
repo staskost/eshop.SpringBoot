@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.staskost.eshop.model.User;
-import com.staskost.eshop.security.Authorization;
 import com.staskost.eshop.services.UserService;
 
 @RestController
@@ -46,7 +45,7 @@ public class UserController {
 
 	@GetMapping("/by-token")
 	public ResponseEntity<User> getUserFromToken(@RequestHeader(value = "staskost") String token) {
-		User user = Authorization.getUserFromToken(token);
+		User user = userService.getUserFromToken(token);
 		return ResponseEntity.status(HttpStatus.OK).body(user);
 
 	}

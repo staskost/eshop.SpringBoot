@@ -19,7 +19,7 @@ public class ProductServiceImpl implements ProductService {
 		this.productRepository = productRepository;
 	}
 
-	private Product returnProductOrNull(int id) {
+	private Product returnProductOrException(int id) {
 		Optional<Product> opt = productRepository.findById(id);
 		if (opt.isPresent()) {
 			Product pr = opt.get();
@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public void updateProduct(int id, Product product) {
-		Product pr = returnProductOrNull(id);
+		Product pr = returnProductOrException(id);
 		pr.setName(product.getName());
 		pr.setPrice(product.getPrice());
 		pr.setCategory(product.getCategory());
@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public Product getById(int id) {
-		Product product = returnProductOrNull(id);
+		Product product = returnProductOrException(id);
 		return product;
 	}
 
@@ -79,20 +79,20 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public void setProductPrice(double price, int id) {
-		Product product = returnProductOrNull(id);
+		Product product = returnProductOrException(id);
 		product.setPrice(price);
 		productRepository.save(product);
 	}
 
 	public void removeItemfromProductCount(int items, int id) {
-		Product product = returnProductOrNull(id);
+		Product product = returnProductOrException(id);
 		int count = product.getProductCount();
 		if (items <= 0 || items > count) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid number of items");
 		}
 		product.setProductCount(count - items);
 		productRepository.save(product);
-		Product p = returnProductOrNull(id);
+		Product p = returnProductOrException(id);
 		int countAfterRemoval = p.getProductCount();
 		if (countAfterRemoval <= 0) {
 			p.setIsAvailabe(0);
@@ -101,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public void addItemToProductCount(int items, int id) {
-		Product product = returnProductOrNull(id);
+		Product product = returnProductOrException(id);
 		int count = product.getProductCount();
 		if (items <= 0) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid number of items");
@@ -120,7 +120,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public void removeProduct(int id) {
-		Product product = returnProductOrNull(id);
+		Product product = returnProductOrException(id);
 		productRepository.delete(product);
 	}
 

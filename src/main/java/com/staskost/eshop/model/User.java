@@ -40,6 +40,9 @@ public class User extends BaseEntity implements Serializable {
 	@Column(name = "secret")
 	private String secret;
 
+	@Column(name = "username")
+	private String userName;
+
 	@OneToOne(mappedBy = "user")
 	private Cart cart;
 
@@ -47,7 +50,8 @@ public class User extends BaseEntity implements Serializable {
 		super();
 	}
 
-	public User(String firstName, String lastName, String email, String password, int isLoyal, int points, Role role) {
+	public User(String firstName, String lastName, String email, String password, int isLoyal, int points, Role role,
+			String username) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -56,6 +60,7 @@ public class User extends BaseEntity implements Serializable {
 		this.isLoyal = isLoyal;
 		this.points = points;
 		this.role = role;
+		this.userName = username;
 	}
 
 	public String getFirstName() {
@@ -128,6 +133,14 @@ public class User extends BaseEntity implements Serializable {
 
 	public void setSecret(String secret) {
 		this.secret = secret;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUsername(String userName) {
+		this.userName = userName;
 	}
 
 }

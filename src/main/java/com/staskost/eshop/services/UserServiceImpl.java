@@ -7,9 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staskost.eshop.model.Product;
 import com.staskost.eshop.model.User;
 import com.staskost.eshop.repos.UserRepository;
+
+import io.jsonwebtoken.Jwts;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,8 +22,8 @@ public class UserServiceImpl implements UserService {
 	public UserServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
-	
-	private User returnUserOrNull(int id) {
+
+	private User returnUserOrException(int id) {
 		Optional<User> opt = userRepository.findById(id);
 		if (opt.isPresent()) {
 			User user = opt.get();
@@ -43,7 +46,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public User getById(int id) {
-		User user = returnUserOrNull(id);
+		User user = returnUserOrException(id);
 		return user;
 	}
 
@@ -93,5 +96,21 @@ public class UserServiceImpl implements UserService {
 		// card transaction here
 		System.out.println("Your transaction was successfull");
 	}
+
+	private Object getClaimFromToken(String token) {
+		Object user = Jwts.parser().setSigningKey("123#&*zcvAWEE999").parseClaimsJws(token).getBody().get("user");
+		return user;
+	}
+
+	public User getUserFromToken(String token) {
+		Object obj = getClaimFromToken(token);
+		ObjectMapper mapper = new ObjectMapper();
+		User user = mapper.convertValue(obj, User.class);
+		if(user == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+		}
+		return user;
+	}
+
 
 }

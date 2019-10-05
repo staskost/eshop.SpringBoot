@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.staskost.eshop.model.AuthenticationToken;
 import com.staskost.eshop.model.Login;
-import com.staskost.eshop.model.Token;
 import com.staskost.eshop.model.User;
 import com.staskost.eshop.services.UserService;
 
@@ -32,7 +32,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<Token> login(@RequestBody Login login) {
+	public ResponseEntity<AuthenticationToken> login(@RequestBody Login login) {
 		Map<String, Object> claims = new TreeMap<String, Object>();
 		User u = userService.findByEmail(login.getEmail());
 		if (u == null) {
@@ -42,11 +42,13 @@ public class AuthenticationController {
 		String secret = u.retrieveSecret();
 		String hashedPassword = DigestUtils.sha256Hex(password + secret);
 		User user = userService.findByEmailAndPassword(u.getEmail(), hashedPassword);
-		claims.put("user", user);
+		
 		if (user != null) {
+			claims.put("user", user);
 			return new ResponseEntity<>(
-					new Token(Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 864_000_000L))
-							.setClaims(claims).signWith(SignatureAlgorithm.HS256, "123#&*zcvAWEE999").compact()),
+					new AuthenticationToken(Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 864_000_000L))
+							.setClaims(claims)
+							.signWith(SignatureAlgorithm.HS256, "123#&*zcvAWEE999").compact()),
 					HttpStatus.OK);
 		} else {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Password");
