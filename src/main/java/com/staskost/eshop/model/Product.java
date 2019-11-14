@@ -4,9 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,6 +34,9 @@ public class Product extends BaseEntity {
 
 	@Column(name = "is_availabe")
 	private int isAvailabe;
+
+	@Column(name = "photo_link")
+	private String photLink;
 
 	public String getName() {
 		return name;
@@ -91,6 +92,14 @@ public class Product extends BaseEntity {
 
 	public void setIsAvailabe(int isAvailabe) {
 		this.isAvailabe = isAvailabe;
+	}
+
+	public String getPhotLink() {
+		return photLink;
+	}
+
+	public void setPhotLink(String photLink) {
+		this.photLink = photLink;
 	}
 
 }
