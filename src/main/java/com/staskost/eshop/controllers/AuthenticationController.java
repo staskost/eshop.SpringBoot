@@ -1,8 +1,6 @@
 package com.staskost.eshop.controllers;
 
 import java.util.Date;
-import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.HttpStatus;
@@ -26,7 +24,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class AuthenticationController {
 
 	private static final String SECRET_KEY = "123#&*zcvAWEE999";
-	
+
 	private UserService userService;
 
 	public AuthenticationController(UserService userService) {
@@ -48,7 +46,6 @@ public class AuthenticationController {
 		if (user != null) {
 			return new ResponseEntity<>(new AuthenticationToken(Jwts.builder().setIssuedAt(new Date())
 					.setExpiration(new Date(System.currentTimeMillis() + 864_000_000L)).setSubject(user.getEmail())
-//							.claim("email", user.getEmail())
 					.claim("id", user.getId()).claim("role", user.getRole())
 					.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact()), HttpStatus.OK);
 		} else {

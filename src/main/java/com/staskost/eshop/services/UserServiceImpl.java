@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.staskost.eshop.model.Cart;
+import com.staskost.eshop.model.Product;
 import com.staskost.eshop.model.User;
 import com.staskost.eshop.repos.UserRepository;
 
@@ -20,8 +22,14 @@ public class UserServiceImpl implements UserService {
 
 	private UserRepository userRepository;
 
-	public UserServiceImpl(UserRepository userRepository) {
+	private CartService cartService;
+
+	private ProductService productService;
+
+	public UserServiceImpl(UserRepository userRepository, CartService cartService, ProductService productService) {
 		this.userRepository = userRepository;
+		this.cartService = cartService;
+		this.productService = productService;
 	}
 
 	private User returnUserOrException(int id) {
@@ -110,6 +118,27 @@ public class UserServiceImpl implements UserService {
 		String email = userDetails.getUsername();
 		User user = findByEmail(email);
 		return user;
+	}
+
+	public void checkout(int userId, int cartId) {
+		User user = getById(userId);
+		Cart cart = cartService.returnCartOrException(cartId);
+		double total = cartService.getTotal(cart);
+		double totalAfterDiscount = getTotalAfterDiscount(total, user);
+		withdraw(totalAfterDiscount);
+		givePointsToLoyal(totalAfterDiscount, user);
+		cartService.deleteCart(cart);
+		withdraw(totalAfterDiscount);
+		List<Product> products = cart.getCartProducts();
+		int count = 0;
+		for (Product p : products) {
+			count = p.getProductCount();
+			p.setProductCount(count - 1);
+			if (count >= 0) {
+				p.setIsAvailabe(0);
+			}
+			productService.saveProduct(p);
+		}
 	}
 
 }

@@ -38,13 +38,13 @@ import com.staskost.eshop.services.UserService;
 @RequestMapping("secured/admin")
 public class AdminController {
 
+	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+
 	private FileStorageService fileStorageService;
 
 	private UserService userService;
 
 	private ProductService productService;
-
-	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
 	public AdminController(UserService userService, ProductService productService,
 			FileStorageService fileStorageService) {

@@ -22,6 +22,8 @@ public interface UserService {
 	
 	void withdraw(double total);
 	
+	void checkout(int userId, int cartId);
+	
 //	User getUserFromToken(String token);
 	
 	User getAuthenticatedUser();

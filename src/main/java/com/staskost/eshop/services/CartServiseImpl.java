@@ -27,7 +27,7 @@ public class CartServiseImpl implements CartService {
 		this.productService = productService;
 	}
 
-	private Cart returnCartOrException(int id) {
+	public Cart returnCartOrException(int id) {
 		Optional<Cart> opt = cartRepository.findById(id);
 		if (opt.isPresent()) {
 			Cart cart = opt.get();
@@ -83,25 +83,25 @@ public class CartServiseImpl implements CartService {
 		return sum;
 	}
 
-	public void checkout(int userId, int cartId) {
-		User user = userService.getById(userId);
-		Cart cart = returnCartOrException(cartId);
-		double total = getTotal(cart);
-		double totalAfterDiscount = userService.getTotalAfterDiscount(total, user);
-		userService.withdraw(totalAfterDiscount);
-		userService.givePointsToLoyal(totalAfterDiscount, user);
-		deleteCart(cart);
-		userService.withdraw(totalAfterDiscount);
-		List<Product> products = cart.getCartProducts();
-		int count = 0;
-		for (Product p : products) {
-			count = p.getProductCount();
-			p.setProductCount(count - 1);
-			if (count >= 0) {
-				p.setIsAvailabe(0);
-			}
-			productService.saveProduct(p);
-		}
-	}
+//	public void checkout(int userId, int cartId) {
+//		User user = userService.getById(userId);
+//		Cart cart = returnCartOrException(cartId);
+//		double total = getTotal(cart);
+//		double totalAfterDiscount = userService.getTotalAfterDiscount(total, user);
+//		userService.withdraw(totalAfterDiscount);
+//		userService.givePointsToLoyal(totalAfterDiscount, user);
+//		deleteCart(cart);
+//		userService.withdraw(totalAfterDiscount);
+//		List<Product> products = cart.getCartProducts();
+//		int count = 0;
+//		for (Product p : products) {
+//			count = p.getProductCount();
+//			p.setProductCount(count - 1);
+//			if (count >= 0) {
+//				p.setIsAvailabe(0);
+//			}
+//			productService.saveProduct(p);
+//		}
+//	}
 
 }

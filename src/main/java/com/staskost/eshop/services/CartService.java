@@ -18,7 +18,9 @@ public interface CartService {
 	
 	double getTotal(Cart cart);
 	
-	void checkout(int userId, int cartId);
+//	void checkout(int userId, int cartId);
+
+	Cart returnCartOrException(int cartId);
 	
 
 }
