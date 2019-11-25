@@ -43,6 +43,12 @@ public class User extends BaseEntity implements Serializable {
 	@Column(name = "username")
 	private String userName;
 
+	@Column(name = "is_active")
+	private int isActive;
+
+	@Column(name = "failed_login_attempts")
+	private int failedLoginAttempts = 0;
+
 	@OneToOne(mappedBy = "user")
 	private Cart cart;
 
@@ -141,6 +147,22 @@ public class User extends BaseEntity implements Serializable {
 
 	public void setUsername(String userName) {
 		this.userName = userName;
+	}
+
+	public int getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(int isActive) {
+		this.isActive = isActive;
+	}
+
+	public int getFailedLoginAttempts() {
+		return failedLoginAttempts;
+	}
+
+	public void setFailedLoginAttempts(int failedLoginAttempts) {
+		this.failedLoginAttempts = failedLoginAttempts;
 	}
 
 }

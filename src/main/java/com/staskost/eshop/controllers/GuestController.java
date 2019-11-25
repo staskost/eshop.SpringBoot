@@ -40,7 +40,7 @@ public class GuestController {
 			user.setSecret(secret);
 			String sha256hex = DigestUtils.sha256Hex(password + secret);
 			user.setPassword(sha256hex);
-			userService.createUser(user);
+			userService.save(user);
 			return ResponseEntity.status(HttpStatus.OK)
 					.body("User " + user.getFirstName() + " " + user.getLastName() + "was successfully registered.");
 		} else {

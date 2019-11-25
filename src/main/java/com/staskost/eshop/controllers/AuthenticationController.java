@@ -44,10 +44,14 @@ public class AuthenticationController {
 		User user = userService.findByEmailAndPassword(u.getEmail(), hashedPassword);
 
 		if (user != null) {
-			return new ResponseEntity<>(new AuthenticationToken(Jwts.builder().setIssuedAt(new Date())
-					.setExpiration(new Date(System.currentTimeMillis() + 864_000_000L)).setSubject(user.getEmail())
-					.claim("id", user.getId()).claim("role", user.getRole())
-					.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact()), HttpStatus.OK);
+			if (user.getIsActive() == 1) {
+				return new ResponseEntity<>(new AuthenticationToken(Jwts.builder().setIssuedAt(new Date())
+						.setExpiration(new Date(System.currentTimeMillis() + 864_000_000L)).setSubject(user.getEmail())
+						.claim("id", user.getId()).claim("role", user.getRole())
+						.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact()), HttpStatus.OK);
+			} else { 
+				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your account is locked..Try again later");
+			}
 		} else {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Password");
 
