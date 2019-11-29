@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
 
 	public void checkout(int userId, int cartId) {
 		User user = getById(userId);
-		Cart cart = cartService.returnCartOrException(cartId);
+		Cart cart = cartService.getById(cartId);
 		double total = cartService.getTotal(cart);
 		double totalAfterDiscount = getTotalAfterDiscount(total, user);
 		withdraw(totalAfterDiscount);

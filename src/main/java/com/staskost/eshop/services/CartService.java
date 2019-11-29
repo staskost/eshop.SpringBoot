@@ -6,6 +6,8 @@ import com.staskost.eshop.model.User;
 
 public interface CartService {
 	
+	Cart getById(int cartId);
+	
 	Cart createCart(int userId);
 	
 	Cart getUsersCart(int userId);
@@ -20,7 +22,7 @@ public interface CartService {
 	
 //	void checkout(int userId, int cartId);
 
-	Cart returnCartOrException(int cartId);
+//	Cart returnCartOrException(int cartId);
 	
 
 }

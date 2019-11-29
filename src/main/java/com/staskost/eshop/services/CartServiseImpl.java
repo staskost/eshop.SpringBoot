@@ -27,7 +27,13 @@ public class CartServiseImpl implements CartService {
 		this.productService = productService;
 	}
 
-	public Cart returnCartOrException(int id) {
+	@Override
+	public Cart getById(int cartId) {
+		Cart cart = returnCartOrException(cartId);
+		return cart;
+	}
+
+	private Cart returnCartOrException(int id) {
 		Optional<Cart> opt = cartRepository.findById(id);
 		if (opt.isPresent()) {
 			Cart cart = opt.get();
