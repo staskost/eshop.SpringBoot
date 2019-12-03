@@ -40,36 +40,16 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private User returnUserOrException(String email) {
-		User user = userRepository.findByEmail(email);
-		if (user != null) {
-			return user;
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
-		}
-	}
-
-	private User returnUserOrException(String email, String password) {
-		User user = userRepository.findByEmailAndPassword(email, password);
-		if (user != null) {
-			return user;
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
-		}
-	}
-
 	public void save(User user) {
 		userRepository.save(user);
 	}
 
 	public User findByEmail(String email) {
-		User user = returnUserOrException(email);
-		return user;
+		return userRepository.findByEmail(email);
 	}
 
 	public User findByEmailAndPassword(String email, String password) {
-		User user = returnUserOrException(email, password);
-		return user;
+		return userRepository.findByEmailAndPassword(email, password);
 	}
 
 	public User getById(int id) {

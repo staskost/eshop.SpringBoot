@@ -91,25 +91,4 @@ public class CartServiseImpl implements CartService {
 		return sum;
 	}
 
-//	public void checkout(int userId, int cartId) {
-//		User user = userService.getById(userId);
-//		Cart cart = returnCartOrException(cartId);
-//		double total = getTotal(cart);
-//		double totalAfterDiscount = userService.getTotalAfterDiscount(total, user);
-//		userService.withdraw(totalAfterDiscount);
-//		userService.givePointsToLoyal(totalAfterDiscount, user);
-//		deleteCart(cart);
-//		userService.withdraw(totalAfterDiscount);
-//		List<Product> products = cart.getCartProducts();
-//		int count = 0;
-//		for (Product p : products) {
-//			count = p.getProductCount();
-//			p.setProductCount(count - 1);
-//			if (count >= 0) {
-//				p.setIsAvailabe(0);
-//			}
-//			productService.saveProduct(p);
-//		}
-//	}
-
 }
