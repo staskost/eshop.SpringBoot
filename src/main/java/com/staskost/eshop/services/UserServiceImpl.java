@@ -15,8 +15,6 @@ import com.staskost.eshop.model.Product;
 import com.staskost.eshop.model.User;
 import com.staskost.eshop.repos.UserRepository;
 
-import io.jsonwebtoken.Jwts;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -42,16 +40,36 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	private User returnUserOrException(String email) {
+		User user = userRepository.findByEmail(email);
+		if (user != null) {
+			return user;
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+		}
+	}
+
+	private User returnUserOrException(String email, String password) {
+		User user = userRepository.findByEmailAndPassword(email, password);
+		if (user != null) {
+			return user;
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+		}
+	}
+
 	public void save(User user) {
 		userRepository.save(user);
 	}
 
 	public User findByEmail(String email) {
-		return userRepository.findByEmail(email);
+		User user = returnUserOrException(email);
+		return user;
 	}
 
 	public User findByEmailAndPassword(String email, String password) {
-		return userRepository.findByEmailAndPassword(email, password);
+		User user = returnUserOrException(email, password);
+		return user;
 	}
 
 	public User getById(int id) {
@@ -64,7 +82,7 @@ public class UserServiceImpl implements UserService {
 		return users;
 	}
 
-	public void givePointsToLoyal(double total, User user) {
+	private void givePointsToLoyal(double total, User user) {
 		if (user.getIsLoyal() == 1) {
 			int roundedTotal = (int) Math.round(total);
 			if (roundedTotal > 700) {
@@ -81,7 +99,7 @@ public class UserServiceImpl implements UserService {
 		return obtained * 100 / total;
 	}
 
-	public double getTotalAfterDiscount(double total, User user) {
+	private double getTotalAfterDiscount(double total, User user) {
 		double price = 0;
 		double pc = 0;
 		if (user.getIsLoyal() == 1) {
@@ -101,7 +119,7 @@ public class UserServiceImpl implements UserService {
 		return price;
 	}
 
-	public void withdraw(double total) {
+	private void withdraw(double total) {
 		// card transaction here
 		System.out.println("Your transaction was successfull");
 	}

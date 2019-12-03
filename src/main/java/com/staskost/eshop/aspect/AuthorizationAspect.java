@@ -5,6 +5,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,6 +19,7 @@ public class AuthorizationAspect {
 
 	private UserService userService;
 
+	@Autowired
 	public AuthorizationAspect(UserService userService) {
 		this.userService = userService;
 	}

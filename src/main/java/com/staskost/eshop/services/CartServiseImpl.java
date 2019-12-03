@@ -3,6 +3,7 @@ package com.staskost.eshop.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,7 +22,8 @@ public class CartServiseImpl implements CartService {
 
 	private ProductService productService;
 
-	public CartServiseImpl(CartRepository cartRepository, UserService userService, ProductService productService) {
+	public CartServiseImpl(CartRepository cartRepository, @Lazy UserService userService,
+			ProductService productService) {
 		this.cartRepository = cartRepository;
 		this.userService = userService;
 		this.productService = productService;

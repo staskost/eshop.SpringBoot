@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.staskost.eshop.jms.SendTextMessage;
 import com.staskost.eshop.model.Product;
 import com.staskost.eshop.repos.ProductRepository;
 
@@ -14,9 +15,12 @@ import com.staskost.eshop.repos.ProductRepository;
 public class ProductServiceImpl implements ProductService {
 
 	private ProductRepository productRepository;
+	
+	private SendTextMessage sendTextMessageService;
 
-	public ProductServiceImpl(ProductRepository productRepository) {
+	public ProductServiceImpl(ProductRepository productRepository, SendTextMessage sendTextMessageService) {
 		this.productRepository = productRepository;
+		this.sendTextMessageService = sendTextMessageService;
 	}
 
 	private Product returnProductOrException(int id) {
@@ -43,11 +47,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public Product getById(int id) {
+		sendTextMessageService.sendTextMessage("Requested product with id : "+id);
 		Product product = returnProductOrException(id);
 		return product;
 	}
 
 	public List<Product> getAllProducts() {
+		sendTextMessageService.sendTextMessage("Listing all products");
 		return productRepository.findAll();
 	}
 

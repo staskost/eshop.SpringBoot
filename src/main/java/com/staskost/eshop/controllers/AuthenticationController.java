@@ -49,7 +49,7 @@ public class AuthenticationController {
 						.setExpiration(new Date(System.currentTimeMillis() + 864_000_000L)).setSubject(user.getEmail())
 						.claim("id", user.getId()).claim("role", user.getRole())
 						.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact()), HttpStatus.OK);
-			} else { 
+			} else {
 				throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your account is locked..Try again later");
 			}
 		} else {

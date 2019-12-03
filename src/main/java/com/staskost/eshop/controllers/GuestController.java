@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.staskost.eshop.jms.SendTextMessage;
 import com.staskost.eshop.model.Product;
 import com.staskost.eshop.model.User;
 import com.staskost.eshop.services.ProductService;
@@ -25,10 +26,13 @@ public class GuestController {
 	private ProductService productService;
 
 	private UserService userService;
+	
+	private SendTextMessage sendTextMessageService;
 
-	public GuestController(ProductService productService, UserService userService) {
+	public GuestController(ProductService productService, UserService userService, SendTextMessage sendTextMessageService) {
 		this.productService = productService;
 		this.userService = userService;
+		this.sendTextMessageService = sendTextMessageService;
 	}
 
 	@PostMapping("/save")
@@ -46,6 +50,12 @@ public class GuestController {
 		} else {
 			return new ResponseEntity<>("Email Already exists", HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@GetMapping("product/{id}")
+		public ResponseEntity<Product> getProductById(@PathVariable int id){
+		Product product = productService.getById(id);
+		return new ResponseEntity<>(product, HttpStatus.OK);
 	}
 
 	@GetMapping("product/by/price/{price}")
@@ -78,5 +88,10 @@ public class GuestController {
 		List<Product> products = productService.findByNameLike(name);
 		return new ResponseEntity<>(products, HttpStatus.OK);
 	}
-
+	
+	@GetMapping("hello")
+	public String hello() {
+		sendTextMessageService.sendTextMessage("hello");
+		return "hello";
+	}
 }
