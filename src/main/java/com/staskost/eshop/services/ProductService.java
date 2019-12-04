@@ -2,6 +2,8 @@ package com.staskost.eshop.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+
 import com.staskost.eshop.model.Product;
 
 public interface ProductService {
@@ -20,11 +22,19 @@ public interface ProductService {
 
 	List<Product> findByNameStartsWith(String name);
 
-	List<Product> findByPrice(double price);
-
-	List<Product> findByPriceBetween(double minPrice, double maxPrice);
+	List<Product> findByCategoryAndPriceLessThan(String category, double price, PageRequest pageRequest);
 	
-	List<Product> findByCategory(String category);
+	List<Product> findByCategoryAndPriceGreaterThan(String category, Double price, PageRequest pageRequest);
+
+	List<Product> findByCategoryAndPriceBetween(String category, double minPrice, double maxPrice, PageRequest pageRequest);
+	
+	List<Product> findByCategory(String category, PageRequest pageRequest);
+	
+	int findCategoryProductsCount(String category);
+	
+	int findCategoryProductsCountWithPriceLessThan(String category, double price);
+	
+	int findCategoryProductsCountWithPriceGreaterThan(String category, double price);
 
 	void setProductPrice(double price, int id);
 

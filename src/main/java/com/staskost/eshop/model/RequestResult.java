@@ -2,16 +2,16 @@ package com.staskost.eshop.model;
 
 import java.util.List;
 
-public class RequestResult<T> {
+public class RequestResult<T extends BaseEntity> {
 
 	private int totalCount;
 
-	private List<T> paginatedResults;
+	private List<? extends BaseEntity> paginatedResults;
 
 	public RequestResult() {
 	}
 
-	public RequestResult(int count, List<T> paginatedResults) {
+	public RequestResult(int count, List<? extends BaseEntity> paginatedResults) {
 		this.totalCount = count;
 		this.paginatedResults = paginatedResults;
 	}
@@ -24,11 +24,11 @@ public class RequestResult<T> {
 		this.totalCount = totalCount;
 	}
 
-	public List<T> getPaginatedResults() {
+	public List<? extends BaseEntity> getPaginatedResults() {
 		return paginatedResults;
 	}
 
-	public void setPaginatedResults(List<T> paginatedResults) {
+	public void setPaginatedResults(List<? extends BaseEntity> paginatedResults) {
 		this.paginatedResults = paginatedResults;
 	}
 

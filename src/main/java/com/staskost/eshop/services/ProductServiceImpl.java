@@ -3,6 +3,7 @@ package com.staskost.eshop.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,7 +16,7 @@ import com.staskost.eshop.repos.ProductRepository;
 public class ProductServiceImpl implements ProductService {
 
 	private ProductRepository productRepository;
-	
+
 	private SendTextMessage sendTextMessageService;
 
 	public ProductServiceImpl(ProductRepository productRepository, SendTextMessage sendTextMessageService) {
@@ -47,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public Product getById(int id) {
-		sendTextMessageService.sendTextMessage("Requested product with id : "+id);
+		sendTextMessageService.sendTextMessage("Requested product with id : " + id);
 		Product product = returnProductOrException(id);
 		return product;
 	}
@@ -64,7 +65,6 @@ public class ProductServiceImpl implements ProductService {
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found");
 		}
-
 	}
 
 	public List<Product> findByNameLike(String name) {
@@ -76,12 +76,22 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.findByNameStartsWithIgnoreCase(name);
 	}
 
-	public List<Product> findByPrice(double price) {
-		return productRepository.findByPrice(price);
+	public List<Product> findByCategoryAndPriceLessThan(String category, double price, PageRequest pageRequest) {
+		return productRepository.findByCategoryAndPriceLessThan(category, price, pageRequest);
 	}
 
-	public List<Product> findByPriceBetween(double minPrice, double maxPrice) {
-		return productRepository.findByPriceBetween(minPrice, maxPrice);
+	@Override
+	public List<Product> findByCategoryAndPriceGreaterThan(String category, Double price, PageRequest pageRequest) {
+		return productRepository.findByCategoryAndPriceGreaterThan(category, price, pageRequest);
+	}
+
+	public List<Product> findByCategory(String category, PageRequest pageRequest) {
+		return productRepository.findByCategory(category, pageRequest);
+	}
+
+	public List<Product> findByCategoryAndPriceBetween(String category, double minPrice, double maxPrice,
+			PageRequest pageRequest) {
+		return productRepository.findByCategoryAndPriceBetween(category, minPrice, maxPrice, pageRequest);
 	}
 
 	public void setProductPrice(double price, int id) {
@@ -138,9 +148,16 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
-	@Override
-	public List<Product> findByCategory(String category) {
-		List<Product> products = productRepository.findByCategory(category);
-		return products;
+	public int findCategoryProductsCount(String category) {
+		return productRepository.countByCategory(category);
 	}
+
+	public int findCategoryProductsCountWithPriceLessThan(String category, double price) {
+		return productRepository.countByCategoryAndPriceLessThan(category, price);
+	}
+
+	public int findCategoryProductsCountWithPriceGreaterThan(String category, double price) {
+		return productRepository.countByCategoryAndPriceGreaterThan(category, price);
+	}
+
 }
