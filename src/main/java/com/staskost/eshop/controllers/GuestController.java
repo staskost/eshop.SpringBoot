@@ -96,7 +96,7 @@ public class GuestController {
 
 	@GetMapping("product/by/category/sorted/{category}/{price}")
 	public ResponseEntity<RequestResult<Product>> findProductByCategorySortedByPrice(@PathVariable String category,
-			@RequestParam int page, @RequestParam int size) {
+			@PathVariable double price, @RequestParam int page, @RequestParam int size) {
 		int count = productService.findCategoryProductsCount(category);
 		List<Product> products = productService.findByCategory(category, PageRequest.of(page, size, Sort.by("price")));
 		return new ResponseEntity<>(new RequestResult<Product>(count, products), HttpStatus.OK);
