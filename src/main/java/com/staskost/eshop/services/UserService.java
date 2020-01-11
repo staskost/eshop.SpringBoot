@@ -20,6 +20,10 @@ public interface UserService {
 
 //	User getUserFromToken(String token);
 
+	double getTotalAfterDiscount(double total, User user);
+	
+	void givePointsToLoyal(double total, User user);
+	
 	User getAuthenticatedUser();
 
 }

@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 		return users;
 	}
 
-	private void givePointsToLoyal(double total, User user) {
+	public void givePointsToLoyal(double total, User user) {
 		if (user.getIsLoyal() == 1) {
 			int roundedTotal = (int) Math.round(total);
 			if (roundedTotal > 700) {
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 		return obtained * 100 / total;
 	}
 
-	private double getTotalAfterDiscount(double total, User user) {
+	public double getTotalAfterDiscount(double total, User user) {
 		double price = 0;
 		double pc = 0;
 		if (user.getIsLoyal() == 1) {
@@ -119,24 +119,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public void checkout(int userId, int cartId) {
-		User user = getById(userId);
-		Cart cart = cartService.getById(cartId);
-		double total = cartService.getTotal(cart);
-		double totalAfterDiscount = getTotalAfterDiscount(total, user);
-		withdraw(totalAfterDiscount);
-		givePointsToLoyal(totalAfterDiscount, user);
-		cartService.deleteCart(cart);
-		withdraw(totalAfterDiscount);
-		List<Product> products = cart.getCartProducts();
-		int count = 0;
-		for (Product p : products) {
-			count = p.getProductCount();
-			p.setProductCount(count - 1);
-			if (count >= 0) {
-				p.setIsAvailabe(0);
-			}
-			productService.saveProduct(p);
+	User user = getById(userId);
+	Cart cart = cartService.getById(cartId);
+	double total = cartService.getTotal(cart);
+	double totalAfterDiscount = getTotalAfterDiscount(total, user);
+	withdraw(totalAfterDiscount);
+	givePointsToLoyal(totalAfterDiscount, user);
+	cartService.deleteCart(cart);
+	withdraw(totalAfterDiscount);
+	List<Product> products = cart.getCartProducts();
+	int count = 0;
+	for (Product p : products) {
+		count = p.getProductCount();
+		p.setProductCount(count - 1);
+		if (count >= 0) {
+			p.setIsAvailabe(0);
 		}
+		productService.saveProduct(p);
 	}
+}
 
 }

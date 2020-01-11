@@ -1,5 +1,7 @@
 package com.staskost.eshop.controllers;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,13 @@ public class UserController {
 //		return user;
 //
 //	}
+	
+	@GetMapping("/users")//for testing
+	public List<User> getAllUsers() {
+		List<User> users = userService.getAll();
+		return users;
+
+	}
 
 	@GetMapping("/logged-user")
 	public ResponseEntity<User> getAuthenticatedUser() {
@@ -34,7 +43,7 @@ public class UserController {
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
-	@GetMapping
+	@GetMapping("hi")
 	public String sayHello() {
 		return "Hello";
 	}

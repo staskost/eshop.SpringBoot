@@ -23,10 +23,10 @@ import com.staskost.eshop.security.TokenAuthenticationSuccessHandler;
 @EnableScheduling
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private TokenAuthenticationProvider authenticationProvider;
+	private TokenAuthenticationProvider tokenAuthenticationProvider;
 
-	public SecurityConfig(TokenAuthenticationProvider authenticationProvider) {
-		this.authenticationProvider = authenticationProvider;
+	public SecurityConfig(TokenAuthenticationProvider tokenAuthenticationProvider) {
+		this.tokenAuthenticationProvider = tokenAuthenticationProvider;
 	}
 
 	@Bean
@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) {
-		auth.authenticationProvider(authenticationProvider);
+		auth.authenticationProvider(tokenAuthenticationProvider);
 	}
 
 	@Bean
